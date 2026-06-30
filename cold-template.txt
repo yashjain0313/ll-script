@@ -1,0 +1,17 @@
+Hi [Name],
+
+I recently came across the [Role Name] (Job ID: XXXXX) opportunity at [Company Name] and wanted to request a referral if possible.
+
+I am a [Year] [Branch] student at [College Name], currently [interning/working on projects in X]. I am interested in [Software Engineering / Product Management / Data Science / etc.] and enjoy building impactful products.
+
+A few highlights about my profile:
+• Solved XXX+ DSA problems on platforms like LeetCode/Codeforces
+• Achieved [rating/rank/achievement]
+• Built [Project Name], which [1-line impact]
+• Worked as [Internship/Position] where I [1-line impact]
+
+I have attached my resume for your reference. I would be grateful if you could consider referring me for this opportunity.
+
+Thank you for your time and consideration.
+Best Regards,
+[Your Name]

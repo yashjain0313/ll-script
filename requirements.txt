@@ -1,0 +1,4 @@
+playwright
+openai>=1.0.0
+streamlit
+pandas
