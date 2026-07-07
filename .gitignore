@@ -35,3 +35,4 @@ Thumbs.db
 # Data / Images
 data/outreach_tracker.csv
 *.png
+user_info.txt

@@ -40,6 +40,20 @@ with tab1:
                     st.error(f"❌ Automation failed: {e}")
 
 
+def load_user_info():
+    info = {"NAME": "[Your Name]", "RESUME_LINK": "[Your Resume Link]", "EMAIL": "[Your Email]"}
+    try:
+        with open("user_info.txt", "r") as f:
+            for line in f:
+                if "=" in line:
+                    key, val = line.strip().split("=", 1)
+                    info[key] = val
+    except FileNotFoundError:
+        pass
+    return info
+
+USER_INFO = load_user_info()
+
 # ── Agent 2: DM 1st Degree Connections ─────────────────────────────
 with tab2:
     st.header("Message Your Existing Connections")
@@ -52,11 +66,53 @@ with tab2:
         placeholder="e.g. Google, Amazon, Mastercard"
     )
     
-    st.markdown("*(Tip: Use `{name}` in your message to automatically insert their first name!)*")
+    apply_mode = st.radio("Message Type", ["With Job Link", "With Job ID"])
+    
+    user_name = USER_INFO.get("NAME", "Your Name")
+    resume_link = USER_INFO.get("RESUME_LINK", "Your Resume Link")
+    email = USER_INFO.get("EMAIL", "Your Email")
+    
+    job_link = ""
+    job_id = ""
+    
+    if apply_mode == "With Job Link":
+        job_link = st.text_input("Job Link", placeholder="https://careers.slb.com/...")
+        
+        default_template = f"""Hi {{name}}, hope you're doing well!
+
+I recently came across the {job_link} opportunity at {{company_name}} and wanted to reach out to see if you'd be open to referring me.
+
+I'm {user_name}, a recent Computer Science graduate with experience in full-stack development and AI applications. I recently completed my internship at HCLTech, where I worked on backend and AI-driven solutions. I've also solved 200+ DSA problems and built projects involving Agentic AI, RAG systems, and scalable web applications.
+
+Here's my resume: {{resume_link}}
+
+I'd really appreciate it if you could consider referring me for the role. Thanks for your time, and have a great day!
+
+Warm regards,
+{user_name}
+Email: {email}"""
+    else:
+        job_id = st.text_input("Job ID / Role Name", placeholder="e.g., SDE Fresher (Job ID: 12345)")
+        
+        default_template = f"""Hi {{name}}, hope you're doing well!
+
+I recently came across the {job_id} opportunity at {{company_name}} and wanted to reach out to see if you'd be open to referring me.
+
+I'm {user_name}, a recent Computer Science graduate with experience in full-stack development and AI applications. I recently completed my internship at HCLTech, where I worked on backend and AI-driven solutions. I've also solved 200+ DSA problems and built projects involving Agentic AI, RAG systems, and scalable web applications.
+
+Here's my resume: {{resume_link}}
+
+I'd really appreciate it if you could consider referring me for the role. Thanks for your time, and have a great day!
+
+Warm regards,
+{user_name}
+Email: {email}"""
+        
+    st.markdown("*(Tip: The template automatically replaces `{name}`, `{company_name}`, and `{resume_link}` with your inputs!)*")
     dm_text = st.text_area(
         "Personalized DM Template",
-        height=200,
-        placeholder="Hi {name}, hope you're doing well!\n\nI'm reaching out because I saw an open SDE Fresher role at your company. Here is my resume: [link]\n\nWould you be open to referring me?"
+        value=default_template,
+        height=450
     )
     
     if st.button("Start DM Campaign", type="primary"):
@@ -65,10 +121,12 @@ with tab2:
         elif not dm_text:
             st.error("Please enter a message to send.")
         else:
+            final_dm_text = dm_text.replace("{resume_link}", resume_link).replace("{company_name}", company_name)
+            
             st.info(f"🚀 Launching Chrome to message connections at {company_name}. Please check the terminal for logs!")
             with st.spinner("Messaging connections in background..."):
                 try:
-                    asyncio.run(run_dm_campaign(company_name, dm_text))
+                    asyncio.run(run_dm_campaign(company_name, final_dm_text))
                     st.success("✅ DM Campaign completed! Check data/dm_tracker.csv for results.")
                 except Exception as e:
                     st.error(f"❌ Campaign failed: {e}")
