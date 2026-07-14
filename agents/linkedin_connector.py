@@ -99,6 +99,7 @@ async def connect_on_people_page(page, company_url: str, company: str) -> int:
     print(f"\n🔍 Opening People tab for: {company}")
 
     people_tab_url = company_url.rstrip("/") + "/people/"
+    #  people_tab_url = company_url.rstrip("/") + "/people/"
     await page.goto(people_tab_url)
     await human_delay(4, 6)
 
